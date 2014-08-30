@@ -91,8 +91,13 @@ public class NgramTfIdf {
         return StringUtils.join(fields, "\t");
     }
 
+    /**
+     * Sample command line application. Run with --help for more information.
+     *
+     * @param args command line arguments
+     * @throws IOException when unable to open corpus file
+     */
     public static void main(String[] args) throws IOException {
-
         CommandLineParser parser = new GnuParser();
         Options options = new Options();
         options.addOption("ngram", true, "n-gram order");

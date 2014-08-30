@@ -8,9 +8,37 @@ import java.util.*;
  */
 public class TfIdf {
 
-    public enum TfType {NATURAL, LOGARITHM, BOOLEAN}
+    /**
+     * Word count method used for term frequencies
+     */
+    public enum TfType {
+        /**
+         * Term frequency
+         */
+        NATURAL,
+        /**
+         * Log term frequency plus 1
+         */
+        LOGARITHM,
+        /**
+         * 1 if term is present, 0 if it is not
+         */
+        BOOLEAN
+    }
 
-    public enum Normalization {NONE, COSINE}
+    /**
+     * Normalization of the tf-idf vector
+     */
+    public enum Normalization {
+        /**
+         * Do not normalize the vector
+         */
+        NONE,
+        /**
+         * Normalize by the vector elements added in quadrature
+         */
+        COSINE
+    }
 
     /**
      * Term frequency for a single document
@@ -18,7 +46,7 @@ public class TfIdf {
      * @param document bag of terms
      * @param type     natural or logarithmic
      * @param <TERM>   term type
-     * @return map of terms to the number of times they appear in the document
+     * @return map of terms to their term frequencies
      */
     public static <TERM> Map<TERM, Double> tf(Collection<TERM> document, TfType type) {
         Map<TERM, Double> tf = new HashMap<>();
@@ -40,6 +68,13 @@ public class TfIdf {
         return tf;
     }
 
+    /**
+     * Natural term frequency for a single document
+     *
+     * @param document bag of terms
+     * @param <TERM>   term type
+     * @return map of terms to their term frequencies
+     */
     public static <TERM> Map<TERM, Double> tf(Collection<TERM> document) {
         return tf(document, TfType.NATURAL);
     }
@@ -48,8 +83,9 @@ public class TfIdf {
      * Term frequencies for a set of documents
      *
      * @param documents sequence of documents, each of which is a bag of terms
+     * @param type      natural or logarithmic
      * @param <TERM>    term type
-     * @return sequence of map of terms to the number of times they appear in the documents
+     * @return sequence of map of terms to their term frequencies
      */
     public static <TERM> Iterable<Map<TERM, Double>> tfs(Iterable<Collection<TERM>> documents, TfType type) {
         List<Map<TERM, Double>> tfs = new ArrayList<>();
@@ -59,6 +95,13 @@ public class TfIdf {
         return tfs;
     }
 
+    /**
+     * Natural term frequencies for a set of documents
+     *
+     * @param documents sequence of documents, each of which is a bag of terms
+     * @param <TERM>    term type
+     * @return sequence of map of terms to their term frequencies
+     */
     public static <TERM> Iterable<Map<TERM, Double>> tfs(Iterable<Collection<TERM>> documents) {
         return tfs(documents, TfType.NATURAL);
     }
@@ -71,7 +114,7 @@ public class TfIdf {
      *                             document with every term in the vocabulary
      * @param addOne               add one to idf values to prevent divide by zero errors in tf-idf
      * @param <TERM>               term type
-     * @return map of terms to the number of documents they appear in, the minimum value is smoothed to 1
+     * @return map of terms to their inverse document frequency
      */
     public static <TERM> Map<TERM, Double> idf(Iterable<Iterable<TERM>> documentVocabularies,
                                                boolean smooth, boolean addOne) {
@@ -94,6 +137,13 @@ public class TfIdf {
         return idf;
     }
 
+    /**
+     * Smoothed, add-one inverse document frequency for a set of documents
+     *
+     * @param documentVocabularies sets of terms which appear in the documents
+     * @param <TERM>               term type
+     * @return map of terms to their inverse document frequency
+     */
     public static <TERM> Map<TERM, Double> idf(Iterable<Iterable<TERM>> documentVocabularies) {
         return idf(documentVocabularies, true, true);
     }
@@ -127,6 +177,14 @@ public class TfIdf {
         return tfIdf;
     }
 
+    /**
+     * Unnormalized tf-idf for a document
+     *
+     * @param tf     term frequencies of the document
+     * @param idf    inverse document frequency for a set of documents
+     * @param <TERM> term type
+     * @return map of terms to their tf-idf values
+     */
     public static <TERM> Map<TERM, Double> tfIdf(Map<TERM, Double> tf, Map<TERM, Double> idf) {
         return tfIdf(tf, idf, Normalization.NONE);
     }
@@ -145,6 +203,13 @@ public class TfIdf {
         return idf(new KeySetIterable<>(tfs), smooth, addOne);
     }
 
+    /**
+     * Utility to build smoothed, add-one inverse document frequencies from a set of term frequencies
+     *
+     * @param tfs    term frequencies for a set of documents
+     * @param <TERM> term type
+     * @return map of terms to their tf-idf values
+     */
     public static <TERM> Map<TERM, Double> idfFromTfs(Iterable<Map<TERM, Double>> tfs) {
         return idfFromTfs(tfs, true, true);
     }
