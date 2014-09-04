@@ -1,5 +1,6 @@
 package com.github.wpm.tfidf;
 
+import com.github.wpm.tfidf.ngram.NgramTfIdf;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

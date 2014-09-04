@@ -1,4 +1,4 @@
-package com.github.wpm.tfidf;
+package com.github.wpm.tfidf.ngram;
 
 import java.util.List;
 

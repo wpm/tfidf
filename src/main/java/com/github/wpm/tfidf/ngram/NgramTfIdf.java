@@ -1,5 +1,6 @@
-package com.github.wpm.tfidf;
+package com.github.wpm.tfidf.ngram;
 
+import com.github.wpm.tfidf.TfIdf;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
