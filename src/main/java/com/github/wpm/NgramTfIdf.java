@@ -9,8 +9,6 @@ import org.apache.commons.lang.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Utility to calculate tf-idf for text n-grams
@@ -19,17 +17,17 @@ public class NgramTfIdf {
     /**
      * Tokenize a set of documents and extract n-gram terms
      *
-     * @param tokenization tokenization pattern
-     * @param ns           n-gram orders
-     * @param documents    set of documents from which to extract terms
+     * @param tokenizer document tokenizer
+     * @param ns        n-gram orders
+     * @param documents set of documents from which to extract terms
      * @return iterator over document terms, where each document's terms is an iterator over strings
      */
-    public static Iterable<Collection<String>> ngramDocumentTerms(Pattern tokenization, List<Integer> ns,
+    public static Iterable<Collection<String>> ngramDocumentTerms(Tokenizer tokenizer, List<Integer> ns,
                                                                   Iterable<String> documents) {
         // Tokenize the documents.
         List<List<String>> tokenizedDocuments = new ArrayList<>();
         for (String document : documents) {
-            List<String> tokens = tokenize(tokenization, document);
+            List<String> tokens = tokenizer.tokenize(document);
             tokenizedDocuments.add(tokens);
         }
         // Extract N-grams as the terms in our model.
@@ -55,7 +53,7 @@ public class NgramTfIdf {
      * @return iterator over document terms, where each document's terms is an iterator over strings
      */
     public static Iterable<Collection<String>> ngramDocumentTerms(List<Integer> ns, Iterable<String> documents) {
-        return ngramDocumentTerms(Pattern.compile("\\b\\w\\w+\\b"), ns, documents);
+        return ngramDocumentTerms(new RegularExpressionTokenizer(), ns, documents);
     }
 
     private static List<List<String>> ngrams(int n, List<String> tokens) {
@@ -64,15 +62,6 @@ public class NgramTfIdf {
             ngrams.add(tokens.subList(i, i + n));
         }
         return ngrams;
-    }
-
-    private static List<String> tokenize(Pattern pattern, String s) {
-        List<String> tokens = new ArrayList<>();
-        Matcher matcher = pattern.matcher(s);
-        while (matcher.find()) {
-            tokens.add(matcher.group());
-        }
-        return tokens;
     }
 
     private static String termStatistics(Map<String, Double> stats) {
