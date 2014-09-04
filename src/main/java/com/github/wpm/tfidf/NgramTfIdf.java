@@ -1,4 +1,4 @@
-package com.github.wpm;
+package com.github.wpm.tfidf;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
